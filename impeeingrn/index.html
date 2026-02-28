@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>impeeingrn</title>
+  <style>
+    :root{
+      --bg:#0b0f14; --card:#101826; --text:#e8eef7; --muted:#97a6ba; --line:#203149;
+      --brand:#5eead4; --brand2:#60a5fa; --danger:#fb7185; --ok:#34d399; --warn:#fbbf24;
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+      --radius:18px;
+    }
+    [data-theme="light"]{
+      --bg:#f6f7fb; --card:#ffffff; --text:#0b1220; --muted:#5b6b82; --line:#e6eaf2;
+      --brand:#0ea5e9; --brand2:#22c55e; --danger:#e11d48; --ok:#16a34a; --warn:#d97706;
+      --shadow: 0 10px 30px rgba(16,24,40,.10);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1000px 600px at 20% 0%, rgba(94,234,212,.12), transparent 55%),
+                  radial-gradient(900px 600px at 90% 20%, rgba(96,165,250,.14), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .wrap{max-width:1050px; margin:0 auto; padding:22px 18px 40px;}
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:16px 18px; border:1px solid var(--line); border-radius:var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+    .brand{
+      display:flex; flex-direction:column; gap:2px;
+    }
+    .brand h1{
+      margin:0; font-size:28px; letter-spacing:.4px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .tagline{
+      font-size:12px; color:var(--muted);
+      margin-left:36px;
+    }
+    .pill{
+      font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid var(--line);
+      color:var(--muted);
+    }
+    .actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+    .btn{
+      appearance:none; border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 12px; border-radius:12px; cursor:pointer;
+      transition: transform .06s ease, background .15s ease, border-color .15s ease;
+      font-weight:600; font-size:14px;
+    }
+    .btn:hover{background: rgba(255,255,255,.07); border-color: rgba(94,234,212,.35);}
+    .btn:active{transform: translateY(1px);}
+    .btn.primary{
+      border-color: rgba(94,234,212,.45);
+      background: linear-gradient(135deg, rgba(94,234,212,.22), rgba(96,165,250,.18));
+    }
+    .btn.danger{
+      border-color: rgba(251,113,133,.55);
+      background: rgba(251,113,133,.14);
+    }
+    .btn.small{padding:8px 10px; font-size:13px; border-radius:10px;}
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+      margin-top:16px;
+    }
+    @media (max-width: 920px){
+      .grid{grid-template-columns:1fr;}
+      .tagline{margin-left:0}
+    }
+    .card{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
+    }
+    .card h2{
+      margin:0 0 10px; font-size:16px; color:var(--text);
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .muted{color:var(--muted); font-size:13px;}
+    .timerBox{
+      display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    }
+    .timer{
+      font-size:56px; font-weight:900; letter-spacing:1px;
+      background: linear-gradient(90deg, var(--brand), var(--brand2));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .controls{display:flex; gap:10px; flex-wrap:wrap;}
+    .form{
+      display:grid; gap:10px;
+    }
+    label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px;}
+    input, select, textarea{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.10);
+      color:var(--text);
+      outline:none;
+    }
+    [data-theme="light"] input, [data-theme="light"] select, [data-theme="light"] textarea{
+      background: rgba(10,20,40,.03);
+    }
+    textarea{min-height:70px; resize:vertical;}
+    .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+    @media (max-width: 520px){.row2{grid-template-columns:1fr;}}
+    .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;}
+    .chip{
+      font-size:12px; padding:6px 10px; border-radius:999px;
+      border:1px solid var(--line); background: rgba(255,255,255,.04); color:var(--muted);
+    }
+    .chip.good{border-color: rgba(52,211,153,.35); color: var(--ok);}
+    .chip.warn{border-color: rgba(251,191,36,.35); color: var(--warn);}
+    .chip.bad{border-color: rgba(251,113,133,.35); color: var(--danger);}
+    .list{display:grid; gap:10px;}
+    .item{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding:12px;
+      display:grid;
+      gap:8px;
+    }
+    .itemTop{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    }
+    .title{font-weight:800;}
+    .meta{font-size:12px; color:var(--muted); margin-top:3px;}
+    .kv{display:flex; gap:10px; flex-wrap:wrap; font-size:13px;}
+    .kv span{border:1px solid var(--line); border-radius:999px; padding:6px 10px; color:var(--muted);}
+    .kv strong{color:var(--text);}
+    .itemBtns{display:flex; gap:8px; flex-wrap:wrap;}
+    .split{
+      display:grid; grid-template-columns:1fr 1fr; gap:16px;
+    }
+    @media (max-width: 920px){.split{grid-template-columns:1fr;}}
+    .leaderRow{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:10px 12px; border:1px solid var(--line); border-radius:14px;
+      background: rgba(255,255,255,.03);
+    }
+    .rank{font-weight:900; color:var(--muted); width:26px;}
+    .leaderName{font-weight:800;}
+    .leaderRight{font-weight:800;}
+    .divider{height:1px; background:var(--line); margin:12px 0;}
+    .tiny{font-size:12px; color:var(--muted);}
+    a{color:inherit}
+  </style>
+</head>
+
+<body>
+  <div class="wrap" id="app">
+    <div class="topbar">
+      <div class="brand">
+        <h1>🚽 impeeingrn</h1>
+        <div class="tagline">made by tota</div>
+      </div>
+      <div class="actions">
+        <span class="pill" id="saveMode">Saving: Local (this browser)</span>
+        <button class="btn small" id="themeBtn" type="button">Toggle theme</button>
+        <button class="btn small danger" id="clearBtn" type="button">Nuke history</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>
+          <span>Timer</span>
+          <span class="muted" id="statusText">ready to pee</span>
+        </h2>
+
+        <div class="timerBox">
+          <div class="timer" id="timer">00:00.0</div>
+          <div class="controls">
+            <button class="btn primary" id="startBtn" type="button">Start</button>
+            <button class="btn" id="lapBtn" type="button">Mark “peak stream”</button>
+            <button class="btn danger" id="stopBtn" type="button">Stop</button>
+            <button class="btn" id="resetBtn" type="button">Reset</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2>
+          <span>Create Pee</span>
+          <span class="muted">save this legendary moment</span>
+        </h2>
+
+        <div class="form">
+          <div>
+            <label for="peeName">Name your pee</label>
+            <input id="peeName" maxlength="40" placeholder="e.g. Morning Laser" />
+          </div>
+
+          <div class="row2">
+            <div>
+              <label for="washed">Washed hands?</label>
+              <select id="washed">
+                <option value="Yes">Yes ✅</option>
+                <option value="No">No ❌</option>
+              </select>
+            </div>
+            <div>
+              <label for="wiped">Wiped?</label>
+              <select id="wiped">
+                <option value="Yes">Yes 🧻</option>
+                <option value="No">No 😳</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row2">
+            <div>
+              <label for="wipes">How many wipes?</label>
+              <input id="wipes" type="number" min="0" max="99" value="0" />
+            </div>
+            <div>
+              <label for="peeType">Pee vibe</label>
+              <select id="peeType">
+                <option value="Normal">Normal</option>
+                <option value="Speedrun">Speedrun</option>
+                <option value="Hydration King">Hydration King</option>
+                <option value="Suspicious">Suspicious</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label for="notes">Notes (optional)</label>
+            <textarea id="notes" maxlength="140" placeholder="e.g. nearly missed the bus"></textarea>
+          </div>
+
+          <button class="btn primary" id="createBtn" type="button">Create + Save</button>
+          <div class="tiny" id="createHint">Tip: Start → Stop → then Create.</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2>
+          <span>Achievements</span>
+          <span class="muted" id="achHint">unlock badges by peeing</span>
+        </h2>
+        <div class="chips" id="achievements"></div>
+      </div>
+
+      <div class="card">
+        <h2><span>Stats + Leaderboard</span><span class="muted">local legends</span></h2>
+
+        <div class="split">
+          <div>
+            <div class="muted">Stats</div>
+            <div class="chips" id="statsChips"></div>
+          </div>
+          <div>
+            <div class="muted">Leaderboard (Longest)</div>
+            <div class="list" id="leaderboard"></div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2><span>History</span><span class="muted" id="countText">0 pees</span></h2>
+        <div class="list" id="history"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const LS_KEY = "impeeingrn_history_v2";
+  const THEME_KEY = "impeeingrn_theme";
+
+  const el = (id) => document.getElementById(id);
+
+  // UI elements
+  const app = el("app");
+  const timerEl = el("timer");
+  const statusText = el("statusText");
+
+  const startBtn = el("startBtn");
+  const stopBtn = el("stopBtn");
+  const resetBtn = el("resetBtn");
+  const lapBtn = el("lapBtn");
+
+  const peeName = el("peeName");
+  const washed = el("washed");
+  const wiped = el("wiped");
+  const wipes = el("wipes");
+  const peeType = el("peeType");
+  const notes = el("notes");
+  const createBtn = el("createBtn");
+
+  const historyEl = el("history");
+  const countText = el("countText");
+
+  const leaderboardEl = el("leaderboard");
+  const achievementsEl = el("achievements");
+  const statsChipsEl = el("statsChips");
+
+  const clearBtn = el("clearBtn");
+  const themeBtn = el("themeBtn");
+
+  // Timer state (tenths)
+  let tenths = 0;
+  let interval = null;
+  let peakTenths = null;
+
+  const pad2 = (n) => String(n).padStart(2, "0");
+  const formatTenths = (t) => {
+    const totalSeconds = Math.floor(t / 10);
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    const tenth = t % 10;
+    return `${pad2(mins)}:${pad2(secs)}.${tenth}`;
+  };
+  const formatSeconds = (s) => {
+    const mins = Math.floor(s / 60);
+    const secs = s % 60;
+    return `${pad2(mins)}:${pad2(secs)}`;
+  };
+
+  function setStatus(text) { statusText.textContent = text; }
+
+  function updateTimerDisplay() { timerEl.textContent = formatTenths(tenths); }
+
+  function startTimer() {
+    if (interval) return;
+    setStatus("peeing in progress…");
+    interval = setInterval(() => {
+      tenths += 1;
+      updateTimerDisplay();
+    }, 100);
+  }
+
+  function stopTimer() {
+    if (!interval) return;
+    clearInterval(interval);
+    interval = null;
+    setStatus("stopped. name it. save it.");
+  }
+
+  function resetTimer() {
+    clearInterval(interval);
+    interval = null;
+    tenths = 0;
+    peakTenths = null;
+    updateTimerDisplay();
+    setStatus("ready to pee");
+  }
+
+  function markPeak() {
+    if (!interval) return;
+    peakTenths = tenths;
+    setStatus("peak stream marked ✅");
+    setTimeout(() => {
+      if (interval) setStatus("peeing in progress…");
+    }, 900);
+  }
+
+  // Storage
+  function loadHistory() {
+    try {
+      return JSON.parse(localStorage.getItem(LS_KEY)) || [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveHistory(list) {
+    localStorage.setItem(LS_KEY, JSON.stringify(list));
+  }
+
+  // Achievements (based on history + last pee)
+  function computeAchievements(list) {
+    const count = list.length;
+    const durations = list.map(x => x.durationSeconds);
+    const max = durations.length ? Math.max(...durations) : 0;
+    const avg = durations.length ? Math.round(durations.reduce((a,b)=>a+b,0)/durations.length) : 0;
+
+    const badges = [];
+
+    // basic
+    if (count >= 1) badges.push({ label:"First Pee ✅", tone:"good" });
+    if (count >= 5) badges.push({ label:"Pee Apprentice (5)", tone:"good" });
+    if (count >= 25) badges.push({ label:"Pee Veteran (25)", tone:"good" });
+    if (count >= 100) badges.push({ label:"Pee Myth (100)", tone:"warn" });
+
+    // duration-based
+    if (max >= 20) badges.push({ label:"20s Club", tone:"good" });
+    if (max >= 45) badges.push({ label:"Long Stream (45s+)", tone:"warn" });
+    if (max >= 75) badges.push({ label:"Hydrant Mode (75s+)", tone:"warn" });
+
+    // hygiene-ish (just silly, not judgy)
+    const washedYes = list.filter(x => x.washed === "Yes").length;
+    if (count >= 3 && washedYes === count) badges.push({ label:"Clean Hands Streak", tone:"good" });
+
+    const wipesTotal = list.reduce((a,x)=>a + (Number(x.wipes)||0), 0);
+    if (wipesTotal >= 10) badges.push({ label:"🧻 Toilet Paper Investor", tone:"warn" });
+
+    // speed
+    const speedruns = list.filter(x => x.durationSeconds > 0 && x.durationSeconds <= 10).length;
+    if (speedruns >= 3) badges.push({ label:"Speedrunner x3", tone:"good" });
+
+    // average
+    if (avg >= 30 && count >= 5) badges.push({ label:"Consistent Stream", tone:"good" });
+
+    if (!badges.length) badges.push({ label:"No badges yet… go pee", tone:"bad" });
+
+    return badges;
+  }
+
+  function computeStats(list) {
+    const count = list.length;
+    const totalSeconds = list.reduce((a,x)=>a + x.durationSeconds, 0);
+    const avg = count ? Math.round(totalSeconds / count) : 0;
+    const longest = count ? Math.max(...list.map(x => x.durationSeconds)) : 0;
+    const shortest = count ? Math.min(...list.map(x => x.durationSeconds)) : 0;
+
+    return [
+      { label:`Total: ${count}`, tone:"" },
+      { label:`Total time: ${formatSeconds(totalSeconds)}`, tone:"" },
+      { label:`Avg: ${formatSeconds(avg)}`, tone:"" },
+      { label:`Longest: ${formatSeconds(longest)}`, tone:"warn" },
+      { label:`Shortest: ${formatSeconds(shortest)}`, tone:"good" },
+    ];
+  }
+
+  function renderStats(list) {
+    const stats = computeStats(list);
+    statsChipsEl.innerHTML = stats.map(s =>
+      `<span class="chip ${s.tone}">${escapeHtml(s.label)}</span>`
+    ).join("");
+  }
+
+  function renderAchievements(list) {
+    const badges = computeAchievements(list);
+    achievementsEl.innerHTML = badges.map(b =>
+      `<span class="chip ${b.tone}">${escapeHtml(b.label)}</span>`
+    ).join("");
+  }
+
+  function renderLeaderboard(list) {
+    // Top 10 longest
+    const top = [...list]
+      .sort((a,b) => b.durationSeconds - a.durationSeconds)
+      .slice(0, 10);
+
+    if (!top.length) {
+      leaderboardEl.innerHTML = `<div class="muted">No pees yet. Be the first legend.</div>`;
+      return;
+    }
+
+    leaderboardEl.innerHTML = top.map((x, i) => `
+      <div class="leaderRow">
+        <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+          <div class="rank">#${i+1}</div>
+          <div style="min-width:0;">
+            <div class="leaderName" title="${escapeHtml(x.name)}">${escapeHtml(truncate(x.name, 18))}</div>
+            <div class="meta">${escapeHtml(x.date)}</div>
+          </div>
+        </div>
+        <div class="leaderRight">${formatSeconds(x.durationSeconds)}</div>
+      </div>
+    `).join("");
+  }
+
+  function renderHistory(list) {
+    countText.textContent = `${list.length} pee${list.length === 1 ? "" : "s"}`;
+
+    if (!list.length) {
+      historyEl.innerHTML = `<div class="muted">No history yet. Start the timer and make history.</div>`;
+      return;
+    }
+
+    // newest first
+    const view = [...list].slice().reverse();
+
+    historyEl.innerHTML = view.map(item => `
+      <div class="item" data-id="${item.id}">
+        <div class="itemTop">
+          <div>
+            <div class="title">${escapeHtml(item.name)}</div>
+            <div class="meta">${escapeHtml(item.date)} • peak: ${item.peakSeconds == null ? "—" : formatSeconds(item.peakSeconds)}</div>
+          </div>
+          <div class="itemBtns">
+            <button class="btn small" data-action="edit">Edit</button>
+            <button class="btn small danger" data-action="delete">Delete</button>
+          </div>
+        </div>
+
+        <div class="kv">
+          <span>Duration: <strong>${formatSeconds(item.durationSeconds)}</strong></span>
+          <span>Washed: <strong>${escapeHtml(item.washed)}</strong></span>
+          <span>Wiped: <strong>${escapeHtml(item.wiped)}</strong></span>
+          <span>Wipes: <strong>${escapeHtml(String(item.wipes))}</strong></span>
+          <span>Vibe: <strong>${escapeHtml(item.peeType)}</strong></span>
+        </div>
+
+        ${item.notes ? `<div class="tiny">📝 ${escapeHtml(item.notes)}</div>` : ``}
+      </div>
+    `).join("");
+
+    // wire buttons via event delegation
+    historyEl.onclick = (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      const card = e.target.closest(".item");
+      if (!card) return;
+      const id = card.getAttribute("data-id");
+      const action = btn.getAttribute("data-action");
+      if (action === "delete") deletePee(id);
+      if (action === "edit") editPee(id);
+    };
+  }
+
+  function rerenderAll() {
+    const list = loadHistory();
+    renderHistory(list);
+    renderLeaderboard(list);
+    renderAchievements(list);
+    renderStats(list);
+  }
+
+  // CRUD
+  function createPee() {
+    const name = (peeName.value || "").trim() || "Unnamed Pee";
+    const durationSeconds = Math.round(tenths / 10);
+    if (durationSeconds <= 0) {
+      setStatus("start + stop first 😭");
+      return;
+    }
+
+    const list = loadHistory();
+    const pee = {
+      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2),
+      name,
+      durationSeconds,
+      peakSeconds: peakTenths == null ? null : Math.round(peakTenths / 10),
+      washed: washed.value,
+      wiped: wiped.value,
+      wipes: clampInt(wipes.value, 0, 99),
+      peeType: peeType.value,
+      notes: (notes.value || "").trim(),
+      date: new Date().toLocaleString()
+    };
+
+    list.push(pee);
+    saveHistory(list);
+
+    // reset input + timer
+    peeName.value = "";
+    notes.value = "";
+    wipes.value = "0";
+    peakTenths = null;
+    resetTimer();
+    setStatus("saved ✅ absolute cinema");
+
+    rerenderAll();
+  }
+
+  function deletePee(id) {
+    const list = loadHistory();
+    const next = list.filter(x => x.id !== id);
+    saveHistory(next);
+    rerenderAll();
+    setStatus("deleted 🗑️");
+  }
+
+  function editPee(id) {
+    const list = loadHistory();
+    const idx = list.findIndex(x => x.id === id);
+    if (idx < 0) return;
+
+    const item = list[idx];
+
+    const newName = prompt("Rename this pee:", item.name);
+    if (newName === null) return; // canceled
+
+    const newNotes = prompt("Edit notes (optional):", item.notes || "");
+    if (newNotes === null) return;
+
+    item.name = (newName || "").trim() || item.name;
+    item.notes = (newNotes || "").trim();
+
+    saveHistory(list);
+    rerenderAll();
+    setStatus("edited ✍️");
+  }
+
+  function nukeHistory() {
+    const ok = confirm("NUKE ALL HISTORY? This cannot be undone.");
+    if (!ok) return;
+    localStorage.removeItem(LS_KEY);
+    rerenderAll();
+    setStatus("history nuked 💥");
+    resetTimer();
+  }
+
+  // Theme
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem(THEME_KEY, theme);
+  }
+  function initTheme() {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === "light" || saved === "dark") applyTheme(saved);
+    else applyTheme("dark");
+  }
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute("data-theme") || "dark";
+    applyTheme(current === "dark" ? "light" : "dark");
+  }
+
+  // Helpers
+  function clampInt(v, min, max) {
+    const n = Number.parseInt(v, 10);
+    if (Number.isNaN(n)) return min;
+    return Math.max(min, Math.min(max, n));
+  }
+  function truncate(s, n) {
+    if (!s) return "";
+    return s.length > n ? s.slice(0, n-1) + "…" : s;
+  }
+  function escapeHtml(str) {
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  // Events
+  startBtn.onclick = startTimer;
+  stopBtn.onclick = stopTimer;
+  resetBtn.onclick = resetTimer;
+  lapBtn.onclick = markPeak;
+  createBtn.onclick = createPee;
+
+  clearBtn.onclick = nukeHistory;
+  themeBtn.onclick = toggleTheme;
+
+  // init
+  initTheme();
+  updateTimerDisplay();
+  rerenderAll();
+})();
+</script>
+</body>
+</html>
+
