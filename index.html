@@ -1,620 +1,294 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>impeeingrn</title>
+<meta charset="UTF-8">
+<title>impeeingrn</title>
 
-  <style>
-    :root{
-      --bg:#0b0f14; --card:#101826; --text:#e8eef7; --muted:#97a6ba; --line:#203149;
-      --brand:#5eead4; --brand2:#60a5fa; --danger:#fb7185; --ok:#34d399; --warn:#fbbf24;
-      --shadow: 0 10px 30px rgba(0,0,0,.25);
-      --radius:18px;
-    }
-    [data-theme="light"]{
-      --bg:#f6f7fb; --card:#ffffff; --text:#0b1220; --muted:#5b6b82; --line:#e6eaf2;
-      --brand:#0ea5e9; --brand2:#22c55e; --danger:#e11d48; --ok:#16a34a; --warn:#d97706;
-      --shadow: 0 10px 30px rgba(16,24,40,.10);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background: radial-gradient(1000px 600px at 20% 0%, rgba(94,234,212,.12), transparent 55%),
-                  radial-gradient(900px 600px at 90% 20%, rgba(96,165,250,.14), transparent 55%),
-                  var(--bg);
-      color:var(--text);
-      min-height:100vh;
-    }
-    .wrap{max-width:1100px; margin:0 auto; padding:22px 18px 40px;}
-    .topbar{
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      padding:16px 18px; border:1px solid var(--line); border-radius:var(--radius);
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
-    }
-    .brand{display:flex; flex-direction:column; gap:2px;}
-    .brand h1{margin:0; font-size:28px; letter-spacing:.4px; display:flex; align-items:center; gap:10px;}
-    .tagline{font-size:12px; color:var(--muted); margin-left:36px;}
-    .actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
-    .pill{
-      font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid var(--line);
-      color:var(--muted);
-      background: rgba(255,255,255,.03);
-    }
-    .btn{
-      appearance:none; border:1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      color:var(--text);
-      padding:10px 12px; border-radius:12px; cursor:pointer;
-      transition: transform .06s ease, background .15s ease, border-color .15s ease;
-      font-weight:700; font-size:14px;
-    }
-    .btn:hover{background: rgba(255,255,255,.07); border-color: rgba(94,234,212,.35);}
-    .btn:active{transform: translateY(1px);}
-    .btn.primary{border-color: rgba(94,234,212,.45); background: linear-gradient(135deg, rgba(94,234,212,.22), rgba(96,165,250,.18));}
-    .btn.danger{border-color: rgba(251,113,133,.55); background: rgba(251,113,133,.14);}
-    .btn.small{padding:8px 10px; font-size:13px; border-radius:10px;}
+<style>
+body{
+font-family:Arial;
+background:#0b0f14;
+color:white;
+text-align:center;
+margin:0;
+padding:20px;
+}
 
-    .grid{display:grid; grid-template-columns: 1.15fr .85fr; gap:16px; margin-top:16px;}
-    @media (max-width: 920px){ .grid{grid-template-columns:1fr;} .tagline{margin-left:0} }
+h1{
+font-size:40px;
+}
 
-    .card{
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding:16px;
-    }
-    .card h2{
-      margin:0 0 10px; font-size:16px; color:var(--text);
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-    }
-    .muted{color:var(--muted); font-size:13px;}
-    .timerBox{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;}
-    .timer{
-      font-size:56px; font-weight:900; letter-spacing:1px;
-      background: linear-gradient(90deg, var(--brand), var(--brand2));
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-    }
-    .controls{display:flex; gap:10px; flex-wrap:wrap;}
-    .divider{height:1px; background:var(--line); margin:12px 0;}
-    .form{display:grid; gap:10px;}
-    label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px;}
-    input, select, textarea{
-      width:100%; padding:10px 12px; border-radius:12px; border:1px solid var(--line);
-      background: rgba(0,0,0,.10); color:var(--text); outline:none;
-    }
-    [data-theme="light"] input, [data-theme="light"] select, [data-theme="light"] textarea{ background: rgba(10,20,40,.03); }
-    textarea{min-height:70px; resize:vertical;}
-    .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
-    @media (max-width: 520px){ .row2{grid-template-columns:1fr;} }
+.container{
+max-width:800px;
+margin:auto;
+}
 
-    .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;}
-    .chip{
-      font-size:12px; padding:6px 10px; border-radius:999px;
-      border:1px solid var(--line); background: rgba(255,255,255,.04); color:var(--muted);
-    }
-    .chip.good{border-color: rgba(52,211,153,.35); color: var(--ok);}
-    .chip.warn{border-color: rgba(251,191,36,.35); color: var(--warn);}
-    .chip.bad{border-color: rgba(251,113,133,.35); color: var(--danger);}
+.timer{
+font-size:60px;
+margin:20px;
+}
 
-    .list{display:grid; gap:10px;}
-    .leaderRow{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding:10px 12px; border:1px solid var(--line); border-radius:14px;
-      background: rgba(255,255,255,.03);
-    }
-    .rank{font-weight:900; color:var(--muted); width:34px;}
-    .leaderName{font-weight:800;}
-    .leaderRight{font-weight:800;}
+button{
+padding:10px 16px;
+margin:5px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
 
-    .item{
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      border-radius: 16px;
-      padding:12px;
-      display:grid;
-      gap:8px;
-    }
-    .itemTop{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
-    .title{font-weight:900;}
-    .meta{font-size:12px; color:var(--muted); margin-top:3px;}
-    .kv{display:flex; gap:10px; flex-wrap:wrap; font-size:13px;}
-    .kv span{border:1px solid var(--line); border-radius:999px; padding:6px 10px; color:var(--muted);}
-    .kv strong{color:var(--text);}
-    .tiny{font-size:12px; color:var(--muted);}
-  </style>
+.start{background:#2ecc71;color:white;}
+.stop{background:#e74c3c;color:white;}
+.save{background:#3498db;color:white;}
+.delete{background:#ff4d4d;color:white;}
 
-  <!-- Supabase client (frontend) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+.card{
+background:#121823;
+padding:15px;
+border-radius:12px;
+margin:10px 0;
+text-align:left;
+}
+
+.small{
+font-size:12px;
+opacity:0.7;
+}
+
+.leader{
+background:#101826;
+padding:10px;
+border-radius:10px;
+margin:5px;
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 </head>
 
 <body>
-  <div class="wrap" id="app">
-    <div class="topbar">
-      <div class="brand">
-        <h1>🚽 impeeingrn</h1>
-        <div class="tagline">made by tota</div>
-      </div>
-      <div class="actions">
-        <span class="pill" id="modePill">Mode: global (Supabase)</span>
-        <button class="btn small" id="themeBtn" type="button">Toggle theme</button>
-        <button class="btn small" id="refreshBtn" type="button">Refresh</button>
-      </div>
-    </div>
 
-    <div class="grid">
-      <!-- LEFT -->
-      <div class="card">
-        <h2>
-          <span>Timer</span>
-          <span class="muted" id="statusText">ready to pee</span>
-        </h2>
+<div class="container">
 
-        <div class="timerBox">
-          <div class="timer" id="timer">00:00.0</div>
-          <div class="controls">
-            <button class="btn primary" id="startBtn" type="button">Start</button>
-            <button class="btn" id="peakBtn" type="button">Mark “peak stream”</button>
-            <button class="btn danger" id="stopBtn" type="button">Stop</button>
-            <button class="btn" id="resetBtn" type="button">Reset</button>
-          </div>
-        </div>
+<h1>🚽 impeeingrn</h1>
+<p class="small">made by tota</p>
 
-        <div class="divider"></div>
+<div class="timer" id="timer">00:00</div>
 
-        <h2>
-          <span>Create Pee</span>
-          <span class="muted">this saves globally</span>
-        </h2>
+<button class="start" onclick="startTimer()">Start</button>
+<button class="stop" onclick="stopTimer()">Stop</button>
 
-        <div class="form">
-          <div>
-            <label for="peeName">Name your pee</label>
-            <input id="peeName" maxlength="40" placeholder="e.g. Morning Laser" />
-          </div>
+<br><br>
 
-          <div class="row2">
-            <div>
-              <label for="washed">Washed hands?</label>
-              <select id="washed">
-                <option value="Yes">Yes ✅</option>
-                <option value="No">No ❌</option>
-              </select>
-            </div>
-            <div>
-              <label for="wiped">Wiped?</label>
-              <select id="wiped">
-                <option value="Yes">Yes 🧻</option>
-                <option value="No">No 😳</option>
-              </select>
-            </div>
-          </div>
+<input id="peeName" placeholder="Name your pee"><br><br>
 
-          <div class="row2">
-            <div>
-              <label for="wipes">How many wipes?</label>
-              <input id="wipes" type="number" min="0" max="99" value="0" />
-            </div>
-            <div>
-              <label for="peeType">Pee vibe</label>
-              <select id="peeType">
-                <option value="Normal">Normal</option>
-                <option value="Speedrun">Speedrun</option>
-                <option value="Hydration King">Hydration King</option>
-                <option value="Suspicious">Suspicious</option>
-              </select>
-            </div>
-          </div>
+<select id="washed">
+<option value="Yes">Washed hands</option>
+<option value="No">Did not wash</option>
+</select>
 
-          <div>
-            <label for="notes">Notes (optional)</label>
-            <textarea id="notes" maxlength="140" placeholder="e.g. almost missed the bus"></textarea>
-          </div>
+<select id="wiped">
+<option value="Yes">Wiped</option>
+<option value="No">Did not wipe</option>
+</select>
 
-          <button class="btn primary" id="createBtn" type="button">Create + Save</button>
-          <div class="tiny" id="hintText">Tip: Start → Stop → Create.</div>
-        </div>
+<input id="wipes" type="number" placeholder="wipe count" value="0">
 
-        <div class="divider"></div>
+<br><br>
 
-        <h2><span>Achievements</span><span class="muted">local badges</span></h2>
-        <div class="chips" id="achievements"></div>
+<button class="save" onclick="createPee()">Save Pee</button>
 
-        <div class="divider"></div>
-        <div class="tiny" id="debugText"></div>
-      </div>
+<hr>
 
-      <!-- RIGHT -->
-      <div class="card">
-        <h2><span>Global Leaderboard</span><span class="muted">top 10 longest</span></h2>
-        <div class="list" id="leaderboard"></div>
+<h2>🏆 Global Leaderboard</h2>
+<div id="leaderboard"></div>
 
-        <div class="divider"></div>
+<hr>
 
-        <h2><span>Global Recent Pee Feed</span><span class="muted" id="countText">loading…</span></h2>
-        <div class="list" id="history"></div>
-      </div>
-    </div>
-  </div>
+<h2>🌎 Recent Pees</h2>
+<div id="history"></div>
+
+</div>
 
 <script>
-(() => {
-  /************************************************************
-   * 1) PASTE YOUR SUPABASE KEYS HERE
-   ************************************************************/
-  const SUPABASE_URL = "https://bhaznhxhrevrdseeuuyc.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_qsMqS7B5nMxJe5xW__-ulA_wLviAppV";
 
-  /************************************************************
-   * 2) BASIC UI HOOKS
-   ************************************************************/
-  const el = (id) => document.getElementById(id);
+const SUPABASE_URL = "https://bhaznhxhrevrdseeuuyc.supabase.co";
+const SUPABASE_ANON_KEY = "PASTE_YOUR_ANON_KEY";
 
-  const timerEl = el("timer");
-  const statusText = el("statusText");
-  const hintText = el("hintText");
-  const debugText = el("debugText");
+const supabase = window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_ANON_KEY
+);
 
-  const startBtn = el("startBtn");
-  const stopBtn = el("stopBtn");
-  const resetBtn = el("resetBtn");
-  const peakBtn = el("peakBtn");
-  const createBtn = el("createBtn");
+let seconds=0;
+let interval=null;
 
-  const peeName = el("peeName");
-  const washed = el("washed");
-  const wiped = el("wiped");
-  const wipes = el("wipes");
-  const peeType = el("peeType");
-  const notes = el("notes");
+const timer=document.getElementById("timer");
 
-  const historyEl = el("history");
-  const countText = el("countText");
-  const leaderboardEl = el("leaderboard");
-  const achievementsEl = el("achievements");
+function startTimer(){
+if(interval) return;
 
-  const themeBtn = el("themeBtn");
-  const refreshBtn = el("refreshBtn");
-  const modePill = el("modePill");
+interval=setInterval(()=>{
+seconds++;
+renderTimer();
+},1000);
+}
 
-  /************************************************************
-   * 3) THEME
-   ************************************************************/
-  const THEME_KEY = "impeeingrn_theme";
-  function applyTheme(theme) {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem(THEME_KEY, theme);
-  }
-  function initTheme() {
-    const saved = localStorage.getItem(THEME_KEY);
-    if (saved === "light" || saved === "dark") applyTheme(saved);
-    else applyTheme("dark");
-  }
-  function toggleTheme() {
-    const current = document.documentElement.getAttribute("data-theme") || "dark";
-    applyTheme(current === "dark" ? "light" : "dark");
-  }
+function stopTimer(){
+clearInterval(interval);
+interval=null;
+}
 
-  /************************************************************
-   * 4) TIMER (tenths)
-   ************************************************************/
-  let tenths = 0;
-  let interval = null;
-  let peakTenths = null;
+function renderTimer(){
+let m=Math.floor(seconds/60);
+let s=seconds%60;
 
-  const pad2 = (n) => String(n).padStart(2, "0");
-  const formatTenths = (t) => {
-    const totalSeconds = Math.floor(t / 10);
-    const mins = Math.floor(totalSeconds / 60);
-    const secs = totalSeconds % 60;
-    const tenth = t % 10;
-    return `${pad2(mins)}:${pad2(secs)}.${tenth}`;
-  };
-  const formatSeconds = (s) => {
-    const mins = Math.floor(s / 60);
-    const secs = s % 60;
-    return `${pad2(mins)}:${pad2(secs)}`;
-  };
+timer.textContent=
+String(m).padStart(2,"0")+":"+
+String(s).padStart(2,"0");
+}
 
-  function setStatus(text) { statusText.textContent = text; }
-  function updateTimerDisplay() { timerEl.textContent = formatTenths(tenths); }
+function resetTimer(){
+seconds=0;
+renderTimer();
+}
 
-  function startTimer() {
-    if (interval) return;
-    setStatus("peeing in progress…");
-    interval = setInterval(() => {
-      tenths += 1;
-      updateTimerDisplay();
-    }, 100);
-  }
-  function stopTimer() {
-    if (!interval) return;
-    clearInterval(interval);
-    interval = null;
-    setStatus("stopped. name it. save it.");
-  }
-  function resetTimer() {
-    clearInterval(interval);
-    interval = null;
-    tenths = 0;
-    peakTenths = null;
-    updateTimerDisplay();
-    setStatus("ready to pee");
-  }
-  function markPeak() {
-    if (!interval) return;
-    peakTenths = tenths;
-    setStatus("peak stream marked ✅");
-    setTimeout(() => { if (interval) setStatus("peeing in progress…"); }, 900);
-  }
+const OWNER_KEY="impeeingrn_owner";
 
-  /************************************************************
-   * 5) SUPABASE SETUP
-   ************************************************************/
-  const keysLookReal =
-    SUPABASE_URL.startsWith("https://") &&
-    !SUPABASE_URL.includes("PASTE_") &&
-    SUPABASE_ANON_KEY.length > 20 &&
-    !SUPABASE_ANON_KEY.includes("PASTE_");
+function getOwnerToken(){
+let token=localStorage.getItem(OWNER_KEY);
 
-  const supabase = keysLookReal
-    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-    : null;
+if(!token){
+token=crypto.randomUUID();
+localStorage.setItem(OWNER_KEY,token);
+}
 
-  if (!supabase) {
-    modePill.textContent = "Mode: NOT CONNECTED (paste Supabase keys)";
-    hintText.textContent = "Paste your Supabase keys in the code (SUPABASE_URL + SUPABASE_ANON_KEY).";
-  }
+return token;
+}
 
-  /************************************************************
-   * 6) ANTI-SPAM COOLDOWN (client-side)
-   ************************************************************/
-  const COOLDOWN_MS = 4000;
-  const LAST_POST_KEY = "impeeingrn_last_post_ms";
-  function canPostNow() {
-    const last = Number(localStorage.getItem(LAST_POST_KEY) || 0);
-    return (Date.now() - last) >= COOLDOWN_MS;
-  }
-  function markPosted() {
-    localStorage.setItem(LAST_POST_KEY, String(Date.now()));
-  }
+async function createPee(){
 
-  /************************************************************
-   * 7) DATABASE CALLS
-   ************************************************************/
-  async function insertPeeGlobal(row) {
-    const { error } = await supabase.from("pees").insert([row]);
-    if (error) throw error;
-  }
+const name=document.getElementById("peeName").value||"Unnamed Pee";
+const washed=document.getElementById("washed").value;
+const wiped=document.getElementById("wiped").value;
+const wipes=document.getElementById("wipes").value||0;
 
-  async function fetchRecentGlobal(limit = 30) {
-    const { data, error } = await supabase
-      .from("pees")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(limit);
-    if (error) throw error;
-    return data || [];
-  }
+const duration=seconds;
 
-  async function fetchLeaderboardGlobal(limit = 10) {
-    const { data, error } = await supabase
-      .from("pees")
-      .select("*")
-      .order("duration_seconds", { ascending: false })
-      .limit(limit);
-    if (error) throw error;
-    return data || [];
-  }
+if(duration<=0){
+alert("start the timer first");
+return;
+}
 
-  /************************************************************
-   * 8) RENDERING
-   ************************************************************/
-  function escapeHtml(str) {
-    return String(str)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
-  function truncate(s, n) {
-    if (!s) return "";
-    return s.length > n ? s.slice(0, n-1) + "…" : s;
-  }
+await supabase.from("pees").insert([{
 
-  function renderLeaderboard(list) {
-    if (!list.length) {
-      leaderboardEl.innerHTML = `<div class="muted">No pees yet. Be the first legend.</div>`;
-      return;
-    }
-    leaderboardEl.innerHTML = list.map((x, i) => `
-      <div class="leaderRow">
-        <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-          <div class="rank">#${i+1}</div>
-          <div style="min-width:0;">
-            <div class="leaderName" title="${escapeHtml(x.name)}">${escapeHtml(truncate(x.name, 18))}</div>
-            <div class="meta">${new Date(x.created_at).toLocaleString()}</div>
-          </div>
-        </div>
-        <div class="leaderRight">${formatSeconds(x.duration_seconds)}</div>
-      </div>
-    `).join("");
-  }
+name:name,
+duration_seconds:duration,
+washed:washed,
+wiped:wiped,
+wipes:wipes,
+pee_type:"Normal",
+notes:null,
+peak_seconds:null,
+owner_token:getOwnerToken()
 
-  function renderHistory(list) {
-    countText.textContent = `${list.length} recent pee${list.length === 1 ? "" : "s"}`;
-    if (!list.length) {
-      historyEl.innerHTML = `<div class="muted">Nothing yet. The world is dry.</div>`;
-      return;
-    }
-    historyEl.innerHTML = list.map(x => `
-      <div class="item">
-        <div class="itemTop">
-          <div>
-            <div class="title">${escapeHtml(x.name)}</div>
-            <div class="meta">${new Date(x.created_at).toLocaleString()} • peak: ${x.peak_seconds == null ? "—" : formatSeconds(x.peak_seconds)}</div>
-          </div>
-          <div class="tiny">${formatSeconds(x.duration_seconds)}</div>
-        </div>
+}]);
 
-        <div class="kv">
-          <span>Washed: <strong>${escapeHtml(x.washed)}</strong></span>
-          <span>Wiped: <strong>${escapeHtml(x.wiped)}</strong></span>
-          <span>Wipes: <strong>${escapeHtml(String(x.wipes))}</strong></span>
-          <span>Vibe: <strong>${escapeHtml(x.pee_type)}</strong></span>
-        </div>
+resetTimer();
+loadData();
 
-        ${x.notes ? `<div class="tiny">📝 ${escapeHtml(x.notes)}</div>` : ``}
-      </div>
-    `).join("");
-  }
+}
 
-  // Achievements are local (based on your own recent posts saved in localStorage)
-  const LOCAL_ACH_KEY = "impeeingrn_local_posts";
-  function loadLocalPosts() {
-    try { return JSON.parse(localStorage.getItem(LOCAL_ACH_KEY)) || []; } catch { return []; }
-  }
-  function saveLocalPosts(list) { localStorage.setItem(LOCAL_ACH_KEY, JSON.stringify(list)); }
+async function deletePee(id){
 
-  function computeAchievements(localList) {
-    const count = localList.length;
-    const max = count ? Math.max(...localList.map(x => x.duration_seconds)) : 0;
-    const badges = [];
-    if (count >= 1) badges.push({label:"First Pee ✅", tone:"good"});
-    if (count >= 5) badges.push({label:"Pee Apprentice (5)", tone:"good"});
-    if (count >= 20) badges.push({label:"Pee Veteran (20)", tone:"warn"});
-    if (max >= 20) badges.push({label:"20s Club", tone:"good"});
-    if (max >= 45) badges.push({label:"Long Stream (45s+)", tone:"warn"});
-    if (!badges.length) badges.push({label:"No badges yet… go pee", tone:"bad"});
-    return badges;
-  }
-  function renderAchievements() {
-    const localList = loadLocalPosts();
-    const badges = computeAchievements(localList);
-    achievementsEl.innerHTML = badges.map(b =>
-      `<span class="chip ${b.tone}">${escapeHtml(b.label)}</span>`
-    ).join("");
-  }
+await supabase
+.from("pees")
+.delete()
+.eq("id",id);
 
-  /************************************************************
-   * 9) MAIN ACTION: CREATE + SAVE (GLOBAL)
-   ************************************************************/
-  function clampInt(v, min, max) {
-    const n = Number.parseInt(v, 10);
-    if (Number.isNaN(n)) return min;
-    return Math.max(min, Math.min(max, n));
-  }
+loadData();
 
-  async function createPee() {
-    if (!supabase) {
-      setStatus("paste your Supabase keys first 😭");
-      return;
-    }
+}
 
-    const durationSeconds = Math.round(tenths / 10);
-    if (durationSeconds <= 0) { setStatus("start + stop first 😭"); return; }
+async function loadLeaderboard(){
 
-    if (!canPostNow()) {
-      setStatus("cooldown… don’t spam the pee feed 😭");
-      return;
-    }
+const {data}=await supabase
+.from("pees")
+.select("*")
+.order("duration_seconds",{ascending:false})
+.limit(10);
 
-    const name = (peeName.value || "").trim() || "Unnamed Pee";
-    const row = {
-      name,
-      duration_seconds: durationSeconds,
-      washed: washed.value,
-      wiped: wiped.value,
-      wipes: clampInt(wipes.value, 0, 99),
-      pee_type: peeType.value,
-      notes: (notes.value || "").trim() || null,
-      peak_seconds: peakTenths == null ? null : Math.round(peakTenths / 10),
-    };
+const board=document.getElementById("leaderboard");
 
-    try {
-      createBtn.disabled = true;
-      createBtn.textContent = "Saving…";
-      setStatus("uploading to the global pee cloud…");
+board.innerHTML="";
 
-      await insertPeeGlobal(row);
-      markPosted();
+data.forEach((p,i)=>{
 
-      // Save a copy locally for achievements
-      const local = loadLocalPosts();
-      local.push({ ...row, created_at: new Date().toISOString() });
-      saveLocalPosts(local);
+const div=document.createElement("div");
+div.className="leader";
 
-      // reset UI
-      peeName.value = "";
-      notes.value = "";
-      wipes.value = "0";
-      peakTenths = null;
-      resetTimer();
-      setStatus("saved globally ✅");
-      renderAchievements();
+div.innerHTML=
+"#"+(i+1)+" — "+p.name+
+" ("+p.duration_seconds+"s)";
 
-      await refreshAll();
+board.appendChild(div);
 
-    } catch (err) {
-      console.error(err);
-      setStatus("error saving (check Supabase policies/keys)");
-      debugText.textContent = "Error: " + (err?.message || String(err));
-    } finally {
-      createBtn.disabled = false;
-      createBtn.textContent = "Create + Save";
-    }
-  }
+});
 
-  /************************************************************
-   * 10) REFRESH
-   ************************************************************/
-  async function refreshAll() {
-    if (!supabase) return;
+}
 
-    debugText.textContent = "";
-    setStatus("loading global pees…");
+async function loadHistory(){
 
-    try {
-      const [recent, top] = await Promise.all([
-        fetchRecentGlobal(30),
-        fetchLeaderboardGlobal(10),
-      ]);
+const {data}=await supabase
+.from("pees")
+.select("*")
+.order("created_at",{ascending:false})
+.limit(30);
 
-      renderHistory(recent);
-      renderLeaderboard(top);
+const history=document.getElementById("history");
 
-      setStatus("ready to pee");
-    } catch (err) {
-      console.error(err);
-      setStatus("error loading (check Supabase RLS policies)");
-      debugText.textContent = "Error: " + (err?.message || String(err));
-    }
-  }
+history.innerHTML="";
 
-  /************************************************************
-   * 11) WIRE BUTTONS + INIT
-   ************************************************************/
-  startBtn.onclick = startTimer;
-  stopBtn.onclick = stopTimer;
-  resetBtn.onclick = resetTimer;
-  peakBtn.onclick = markPeak;
-  createBtn.onclick = createPee;
+const myToken=getOwnerToken();
 
-  themeBtn.onclick = toggleTheme;
-  refreshBtn.onclick = refreshAll;
+data.forEach(p=>{
 
-  initTheme();
-  updateTimerDisplay();
-  renderAchievements();
+const div=document.createElement("div");
+div.className="card";
 
-  // First load
-  if (supabase) refreshAll();
-})();
+let deleteBtn="";
+
+if(p.owner_token===myToken){
+
+deleteBtn=
+`<button class="delete" onclick="deletePee('${p.id}')">Delete</button>`;
+
+}
+
+div.innerHTML=
+
+`<strong>${p.name}</strong>
+<div class="small">
+${p.duration_seconds}s • ${p.washed} • wipes:${p.wipes}
+</div>
+${deleteBtn}`;
+
+history.appendChild(div);
+
+});
+
+}
+
+async function loadData(){
+
+loadLeaderboard();
+loadHistory();
+
+}
+
+loadData();
+
 </script>
 
 </body>
