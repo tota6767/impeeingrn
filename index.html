@@ -24,7 +24,7 @@
       background: radial-gradient(1000px 600px at 20% 0%, rgba(94,234,212,.12), transparent 55%),
                   radial-gradient(900px 600px at 90% 20%, rgba(96,165,250,.14), transparent 55%),
                   var(--bg);
- color:var(--text);
+      color:var(--text);
       min-height:100vh;
     }
     .wrap{max-width:1100px; margin:0 auto; padding:22px 18px 40px;}
@@ -56,9 +56,9 @@
     .btn:active{transform: translateY(1px);}
     .btn.primary{border-color: rgba(94,234,212,.45); background: linear-gradient(135deg, rgba(94,234,212,.22), rgba(96,165,250,.18));}
     .btn.danger{border-color: rgba(251,113,133,.55); background: rgba(251,113,133,.14);}
-    .btn.small{padding:8px 10px; font-size:13px;
-border-radius:10px;
-  .grid{display:grid; grid-template-columns: 1.15fr .85fr; gap:16px; margin-top:16px;}
+    .btn.small{padding:8px 10px; font-size:13px; border-radius:10px;}
+
+    .grid{display:grid; grid-template-columns: 1.15fr .85fr; gap:16px; margin-top:16px;}
     @media (max-width: 920px){ .grid{grid-template-columns:1fr;} .tagline{margin-left:0} }
 
     .card{
@@ -85,7 +85,7 @@ border-radius:10px;
     label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px;}
     input, select, textarea{
       width:100%; padding:10px 12px; border-radius:12px; border:1px solid var(--line);
-  background: rgba(0,0,0,.10); color:var(--text); outline:none;
+      background: rgba(0,0,0,.10); color:var(--text); outline:none;
     }
     [data-theme="light"] input, [data-theme="light"] select, [data-theme="light"] textarea{ background: rgba(10,20,40,.03); }
     textarea{min-height:70px; resize:vertical;}
@@ -247,7 +247,7 @@ border-radius:10px;
    * 1) PASTE YOUR SUPABASE KEYS HERE
    ************************************************************/
   const SUPABASE_URL = "https://bhaznhxhrevrdseeuuyc.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_qsMqS7B5nMxJe5xW__-ulA_wLviAppV";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJoYXpuaHhocmV2cmRzZWV1dXljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyOTc5MjMsImV4cCI6MjA4Nzg3MzkyM30.oPIRW6iDwtxpjGeA_6TOOBdABIqP03OrtESHx8xj--I";
 
   /************************************************************
    * 2) BASIC UI HOOKS
